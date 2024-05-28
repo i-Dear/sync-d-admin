@@ -116,13 +116,15 @@
 
 <img src="./public/sample/mobile_1.png" width="250">
 
-| 기능          | 스크린샷                                                  |
-| ------------- | --------------------------------------------------------- |
-| 사용자 목록   | ![Desktop Screenshot 3](./public/readme/사용자목록.png)   |
-| 사용자 등록   | ![Desktop Screenshot 4](./public/readme/사용자등록.png)   |
-| 프로젝트 목록 | ![Desktop Screenshot 5](./public/readme/프로젝트목록.png) |
-| 프로젝트 등록 | ![Desktop Screenshot 6](./public/readme/프로젝트등록.png) |
-| 엑셀 다운로드 | ![Desktop Screenshot 7](./public/readme/엑셀다운로드.gif) |
+| 기능          | 스크린샷                                                                             |
+| ------------- | ------------------------------------------------------------------------------------ |
+| 사용자 목록   | <img src="./public/readme/사용자목록.png" alt="Desktop Screenshot 3" width="200"/>   |
+| 사용자 등록   | <img src="./public/readme/사용자등록.png" alt="Desktop Screenshot 4" width="200"/>   |
+| 프로젝트 목록 | <img src="./public/readme/프로젝트목록.png" alt="Desktop Screenshot 5" width="200"/> |
+| 프로젝트 등록 | <img src="./public/readme/프로젝트등록.png" alt="Desktop Screenshot 6" width="200"/> |
+
+### 엑셀 다운로드
+<img src="./public/readme/엑셀다운로드.gif" alt="Desktop Screenshot 7" width="400"/>
 
 
 ## 제한
