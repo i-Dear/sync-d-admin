@@ -1,125 +1,8 @@
-![Purple Admin UI](./public/og.png)
-
-<h1 align="center">
-  Purple Admin UI
-</h1>
-
-<p align="center">
-  Next.js와 Tailwind를 이용한 모-던 어드민 템플릿
-</p>
-
-## 소개
-
-누구나 손쉽고 빠르게 백오피스 페이지를 개발할 수 있도록 인기있는 라이브러리를 모아 만든 Next.js + Tailwind + Ant Design 기반 어드민 템플릿입니다. ~~어드민 개발만 10년째..~~
-
-![Desktop Demo](./public/sample/desktop_3.png)
-
-> **Warning**
-> This is work in progress. 필요한 설명이나 기능/버그가 있으면 [이슈](https://github.com/purpleio/purple-admin-ui/issues)에 등록해주세요. 순차적으로 검토 후 업데이트 하겠습니다.
-
-### 이런 분들께 추천합니다 👍
-
-1. 어드민 페이지 만드는데 디자인하기 귀찮은 백엔드 프로그래머
-2. Next.js/React 기반에 자주 사용하는 라이브러리를 묶어 놓은 템플릿이 필요한 분
-3. ...
-
-## 데모
-
-https://admin-ui.purple.io/login
-
-> OAuth(Google/GitHub) 또는 아이디/패스워드(admin/admin)으로 로그인하세요.
-
-## 프로젝트 만들기
-
-`Deploy` 버튼을 클릭하여 소스를 복제하고 [vercel](https://vercel.com)에 배포하여 테스트 할 수 있습니다.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fpurpleio%2Fpurple-admin-ui&project-name=purple-admin-ui&repository-name=purple-admin-ui&demo-title=purple-admin-ui&demo-description=Next.js%20%EA%B8%B0%EB%B0%98%20%EC%96%B4%EB%93%9C%EB%AF%BC%20UI&demo-url=https%3A%2F%2Fadmin-ui.purple.io&demo-image=https%3A%2F%2Fadmin-ui.purple.io%2Fog.png&env=NEXTAUTH_SECRET&envDescription=How%20to%20get%20these%20env%20variables%3A&envLink=https%3A%2F%2Fgithub.com%2Fpurpleio%2Fpurple-admin-ui%2Fblob%2Fmain%2F.env.example)
-
-소스를 [다운로드](https://github.com/purpleio/purple-admin-ui/archive/refs/heads/main.zip)하거나 다음 명령어를 입력하여 프로젝트를 시작할 수 있습니다.
-
-```bash
-# npm
-npx create-next-app --example "https://github.com/purpleio/purple-admin-ui"
-# yarn
-yarn create next-app --example "https://github.com/purpleio/purple-admin-ui"
-# pnpm
-pnpm create next-app --example "https://github.com/purpleio/purple-admin-ui"
-```
-
-### 기본 설정
-
-`.env.example` 파일을 복사하여 `.env` 파일을 생성합니다.
-
-```bash
-cp .env.example .env
-```
-
-| 키                              | 설명                       | 예시                                                     |
-| ------------------------------- | -------------------------- | -------------------------------------------------------- |
-| NEXTAUTH_URL                    | 서비스 URL                 | http://localhost:3000                                    |
-| NEXTAUTH_SECRET                 | 랜덤 비밀 키               | [랜덤생성기](https://generate-secret.vercel.app/32) 발급 |
-| GITHUB_CLIENT_ID                | GitHub OAuth Client ID     |                                                          |
-| GITHUB_CLIENT_SECRET            | GitHub OAuth Client Secret |                                                          |
-| GOOGLE_CLIENT_ID                | Google OAuth Client ID     |                                                          |
-| GOOGLE_CLIENT_SECRET            | Google OAuth Client Secret |                                                          |
-| NEXT_PUBLIC_API_ENDPOINT        | API 서버 엔드포인트        | http://localhost:3000                                    |
-| NEXT_PUBLIC_CODENBUTTER_SITE_ID | 팝업 플러그인              | [코드앤버터](https://codenbutter.com) 사이트 아이디      |
-
-### 샘플
-
-샘플 코드를 통해 기본적인 사용법을 확인할 수 있습니다.
-
-**API 서버 (mock data)**
-
-일반적으로 백엔드 서버를 분리하는 경우가 많지만 간단한 테스트를 위한 샘플 코드입니다.
-
-- [src/pages/api/sample/dashboard.ts](src/pages/api/sample/dashboard.ts): 통계 조회
-- [src/pages/api/sample/products/index.ts](src/pages/api/sample/products/index.ts): 상품 목록 조회 API
-- [src/pages/api/sample/products/[id].ts](src/pages/api/sample/products/[id].ts): 상품 CRUD API
-
-**API 클라이언트**
-
-프론트엔드에서 API를 호출하기 위한 함수를 모아 놓은 샘플 코드입니다.  
-API와 관련된 코드와 Type을 관리합니다.
-
-- [src/client/sample/dashboard.ts](src/client/sample/dashboard.ts): 통계 조회 API
-- [src/client/sample/product.ts](src/client/sample/product.ts): 상품 CRUD / Type
-
-**페이지**
-
-대시보드와 상품 CRUD 샘플 페이지입니다.  
-세부사항은 `src/components/page/[동일한 페이지 경로]`에 컴포넌트로 분리합니다.
-
-- [src/pages/index.tsx](src/pages/index.tsx): 대시보드
-- [src/pages/sample/product/list.tsx](src/pages/sample/product/list.tsx): 상품 목록
-- [src/pages/sample/product/new.tsx](src/pages/sample/product/new.tsx): 상품 등록
-- [src/pages/sample/product/edit/[id].tsx](src/pages/sample/product/edit/[id].tsx): 상품 수정
-
-**컴포넌트**
-
-여러가지 라이브러리를 섞어 보기 좋게 만든 샘플 코드입니다.  
-통계, 검색, 리스트, 입력폼등 기본 기능을 확인할 수 있습니다.
-
-- [src/components/page/index/calendar-sample.tsx](src/components/page/index/calendar-sample.tsx): 캘린더 샘플 컴포넌트
-- [src/components/page/index/statistic-sample.tsx](src/components/page/index/statistic-sample.tsx): 통계 샘플 컴포넌트
-- [src/components/page/sample/product/product-form.tsx](src/components/page/sample/product/product-form.tsx): 상품 입력폼 (생성/수정 공통 사용) 컴포넌트
-- [src/components/page/sample/product/product-list.tsx](src/components/page/sample/product/product-list.tsx): 상품 목록 컴포넌트
-- [src/components/page/sample/product/product-search.tsx](src/components/page/sample/product/product-search.tsx): 상품 검색 컴포넌트
-
-**샘플 이미지**
-
-- [public/sample](public/sample): 샘플 이미지
-
-## 기술스택 & 기능
+# 기술스택 & 기능
 
 ### Framework
 
 - [Next.js](https://nextjs.org/) – Vercel에서 만든 React.js 기반 프레임워크
-- [Auth.js](https://authjs.dev/) – OAuth(구글/GitHub) 또는 아이디/패스워드 로그인을 지원하는 인증 라이브러리
-
-### Platforms
-
-- [Vercel](https://vercel.com/) – Next.js 애플리케이션 배포 서비스
 
 ### UI
 
@@ -154,7 +37,7 @@ API와 관련된 코드와 Type을 관리합니다.
 
 ### 아키텍처
 
-- 인증을 제외한 모든 페이지를 정적 페이지로 제공합니다. (SSR 사용 X) ~~API가 죽어도 페이지는 뜹니다~~
+- 인증을 제외한 모든 페이지를 정적 페이지로 제공합니다. (SSR 사용 X)
 - 비즈니스 로직은 백엔드 API로 제공하고 프론트엔드는 잘 표현하고 잘 전달하는 역할을 합니다.
 - 폼과 관련된 부분은 Ant Design의 Form 컴포넌트를 적극적으로 사용합니다.
 
@@ -227,16 +110,25 @@ API와 관련된 코드와 Type을 관리합니다.
 ## 스크린샷
 
 ![Desktop Screenshot 1](./public/sample/desktop_1.png)
+
 ![Desktop Screenshot 2](./public/sample/desktop_2.png)
-![Desktop Screenshot 3](./public/sample/desktop_4.png)
+
 
 <img src="./public/sample/mobile_1.png" width="250">
-<img src="./public/sample/mobile_2.png" width="250">
+
+| 기능          | 스크린샷                                                  |
+| ------------- | --------------------------------------------------------- |
+| 사용자 목록   | ![Desktop Screenshot 3](./public/readme/사용자목록.png)   |
+| 사용자 등록   | ![Desktop Screenshot 4](./public/readme/사용자등록.png)   |
+| 프로젝트 목록 | ![Desktop Screenshot 5](./public/readme/프로젝트목록.png) |
+| 프로젝트 등록 | ![Desktop Screenshot 6](./public/readme/프로젝트등록.png) |
+| 엑셀 다운로드 | ![Desktop Screenshot 7](./public/readme/엑셀다운로드.gif) |
+
 
 ## 제한
 
 - IE 미지원
+  
+## 원본
 
-## Author
-
-- subicura ([@subicura](https://twitter.com/subicura))
+- https://github.com/purpleio/purple-admin-ui

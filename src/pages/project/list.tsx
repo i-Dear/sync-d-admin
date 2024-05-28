@@ -99,18 +99,50 @@ const ProjectList: React.FC = () => {
     setEditingProject(null);
   };
 
-  const handleDownloadExcel = () => {
-    if (!data || !data.projects) {
-      console.error("No data available for download");
-      return;
-    }
+  const handleDownloadExcel = async () => {
+    try {
+      const response = await fetch("http://localhost:8080/admin/project");
+      if (!response.ok) {
+        console.error("Failed to fetch all projects");
+        return;
+      }
 
-    const worksheet = XLSX.utils.json_to_sheet(data.projects);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Projects");
-    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    saveAs(blob, "syncd_projects.xlsx");
+      const allProjects = await response.json();
+      const projectsArray = allProjects.projectEntities || allProjects;
+
+      if (!Array.isArray(projectsArray)) {
+        console.error("Unexpected data format");
+        return;
+      }
+
+      const flattenedProjects = projectsArray.map((project: any) => ({
+        id: project.id,
+        name: project.name,
+        description: project.description,
+        img: project.img,
+        progress: project.progress,
+        lastModifiedDate: project.lastModifiedDate,
+        leftChanceForUserstory: project.leftChanceForUserstory,
+        users: project.users.map((user: any) => user.userId).join(", "), // Join user IDs as a string
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(flattenedProjects);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Projects");
+      const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+      const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
+
+      // 날짜 형식 추가
+      const date = new Date();
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const formattedDate = `${year}${month}${day}`;
+
+      saveAs(blob, `syncd_projects_${formattedDate}.xlsx`);
+    } catch (error) {
+      console.error("An error occurred while downloading the Excel file:", error);
+    }
   };
 
   const columns: ColumnsType<any> = [

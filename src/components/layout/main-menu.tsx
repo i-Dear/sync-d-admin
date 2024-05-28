@@ -65,12 +65,6 @@ const payMenuData: IMenu[] = [
     icon: <DollarSign className="w-5 h-5" />,
     submenu: [
       {
-        name: "Sendbird",
-        link: {
-          path: "/sendbird",
-        },
-      },
-      {
         name: "Chatgpt API",
         link: {
           path: "/chatgpt",
