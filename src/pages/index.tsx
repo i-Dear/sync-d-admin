@@ -1,5 +1,6 @@
 import { useDashboard } from "@/client/sample/dashboard";
 import { getDefaultLayout, IDefaultLayoutPage, IPageHeader } from "@/components/layout/default-layout";
+import CalendarSample from "@/components/page/index/calendar-sample";
 import StatisticSample from "@/components/page/index/statistic-sample";
 import { useAuth } from "@/lib/auth/auth-provider";
 import { Alert, Divider, Skeleton } from "antd";
@@ -28,8 +29,8 @@ const IndexPage: IDefaultLayoutPage = () => {
 
       <Divider />
 
-      {/* <h3 className="title">달력</h3> */}
-      {/* <CalendarSample /> */}
+      <h3 className="title">달력</h3>
+      <CalendarSample />
     </>
   );
 };
