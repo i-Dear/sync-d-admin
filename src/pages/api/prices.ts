@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const response = await fetch("http://localhost:8080/admin/chatgpt");
+  const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/chatgpt");
   const data = await response.json();
 
   const priceData = [

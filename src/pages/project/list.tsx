@@ -32,7 +32,7 @@ const ProjectList: React.FC = () => {
   }, [name, userId, leftChanceForUserstory, startDate, endDate, progress, page, pageSize]);
 
   const queryString = new URLSearchParams(queryParams as any).toString();
-  const url = `http://localhost:8080/admin/project/search?${queryString}`;
+  const url = `https://syncd-backend.dev.i-dear.org/admin/project/search?${queryString}`;
 
   const { data, error, mutate } = useSWR(url, fetcher);
 
@@ -69,7 +69,7 @@ const ProjectList: React.FC = () => {
   const handleDelete = useCallback(
     async (projectId: string) => {
       try {
-        const response = await fetch("http://localhost:8080/admin/project/delete", {
+        const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/project/delete", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -101,7 +101,7 @@ const ProjectList: React.FC = () => {
 
   const handleDownloadExcel = async () => {
     try {
-      const response = await fetch("http://localhost:8080/admin/project");
+      const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/project");
       if (!response.ok) {
         console.error("Failed to fetch all projects");
         return;

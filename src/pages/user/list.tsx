@@ -40,7 +40,7 @@ const UserList: React.FC = () => {
   }, [status, searchType, searchText]);
 
   const queryString = new URLSearchParams(queryParams).toString();
-  const url = `http://localhost:8080/admin/user/search?${queryString}`;
+  const url = `https://syncd-backend.dev.i-dear.org/admin/user/search?${queryString}`;
   const { data, error, mutate } = useSWR(url, fetcher);
 
   const handleChangePage = useCallback(
@@ -76,7 +76,7 @@ const UserList: React.FC = () => {
   const handleDelete = useCallback(
     async (userId: string) => {
       try {
-        const response = await fetch("http://localhost:8080/admin/user/delete", {
+        const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/user/delete", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

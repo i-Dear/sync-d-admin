@@ -58,21 +58,21 @@ const devMenuData: IMenu[] = [
   },
 ];
 
-const payMenuData: IMenu[] = [
-  {
-    id: "pay",
-    name: "유료 API",
-    icon: <DollarSign className="w-5 h-5" />,
-    submenu: [
-      {
-        name: "Chatgpt API",
-        link: {
-          path: "/chatgpt",
-        },
-      },
-    ],
-  },
-];
+// const payMenuData: IMenu[] = [
+//   {
+//     id: "pay",
+//     name: "유료 API",
+//     icon: <DollarSign className="w-5 h-5" />,
+//     submenu: [
+//       {
+//         name: "Chatgpt API",
+//         link: {
+//           path: "/chatgpt",
+//         },
+//       },
+//     ],
+//   },
+// ];
 
 const MainMenu = () => {
   return (
@@ -87,10 +87,10 @@ const MainMenu = () => {
       </Divider>
       <Menu data={devMenuData} /> */}
 
-      <Divider orientation="left" plain>
+      {/* <Divider orientation="left" plain>
         유료 API
-      </Divider>
-      <Menu data={payMenuData} />
+      </Divider> */}
+      {/* <Menu data={payMenuData} /> */}
     </>
   );
 };
