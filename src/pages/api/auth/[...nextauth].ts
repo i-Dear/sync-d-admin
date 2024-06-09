@@ -75,7 +75,7 @@ export default NextAuth({
       if (user) {
         token.id = (user as Session["user"]).id;
         token.login = (user as Session["user"]).login;
-        token.token = (user as any).token; // JWT 토큰 저장
+        token.token = (user as Session["user"]).token; // JWT 토큰 저장
       }
       return token;
     },

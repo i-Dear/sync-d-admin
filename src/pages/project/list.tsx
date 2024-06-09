@@ -9,7 +9,7 @@ import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 import * as XLSX from "xlsx";
-import ProjectSearch from "@/components/page/project/project-search";
+import ProjectSearch from "@/components/page/project/Project-search";
 import { useSession } from "next-auth/react";
 import moment from "moment";
 
@@ -20,7 +20,7 @@ const ProjectList: React.FC = () => {
   const [imageModalOpen, setImageModalOpen] = useState(false); // 이미지 모달 상태
   const [imageSrc, setImageSrc] = useState<string>(""); // 확대할 이미지 URL
   const router = useRouter();
-  const { data: session } = useSession(); // useSession 훅 사용
+  const { data: session } = useSession(); 
   const { name, userId, leftChanceForUserstory, startDate, endDate, progress, userName, page = 1, pageSize = 10 } = router.query;
 
   const queryParams = useMemo(() => {
@@ -89,7 +89,7 @@ const ProjectList: React.FC = () => {
         console.error("세션이 없습니다.");
         return;
       }
-      const token = session.user.token;
+      const token = session? session.user.token : ""
       try {
         const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/project/delete", {
           method: "POST",

@@ -1,5 +1,5 @@
 import GradientBg from "@/components/page/login/gradient-bg";
-import LoginForm from "@/components/page/login/login-form";
+import LoginForm from "@/components/page/login/Login-form";
 import { Alert } from "antd";
 
 const LoginPage = () => {

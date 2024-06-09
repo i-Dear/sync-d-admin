@@ -102,11 +102,6 @@ const ProjectCreate: React.FC<ProjectCreateProps> = ({ project, onFinish, onClos
         formData.append("projectId", project.id);
       }
 
-      // 디버깅을 위한 코드: FormData 내용을 확인
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-
       try {
         const response = await fetch(url, {
           method: "POST",
