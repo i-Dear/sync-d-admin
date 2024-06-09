@@ -62,6 +62,7 @@ module.exports = {
         silver: "#bdc3c7",
         concrete: "#95a5a6",
         asbestos: "#7f8c8d",
+        customBlue: '#4298f4',
       },
     },
   },

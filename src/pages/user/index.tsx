@@ -1,7 +1,7 @@
 // src/pages/user/index.tsx
 import { getDefaultLayout, IDefaultLayoutPage, IPageHeader } from "@/components/layout/default-layout";
 import UserList from "@/pages/user/list";
-import UserSearch from "./user-search";
+import UserSearch from "@/components/page/user/User-search";
 
 const pageHeader: IPageHeader = {
   title: "사용자 목록",

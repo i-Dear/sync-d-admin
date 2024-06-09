@@ -9,14 +9,14 @@ import { useRouter } from "next/router";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import * as XLSX from "xlsx";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import { useSession } from "next-auth/react";
 
 const UserList: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 변경
   const [editingUser, setEditingUser] = useState<any>(null); // 수정할 사용자 데이터 상태
   const router = useRouter();
+  const { data: session } = useSession(); // useSession 훅 사용
   const { status = "ALL", searchType = "userName", searchText = "" } = router.query;
 
   const [queryParams, setQueryParams] = useState<Record<string, string>>({
@@ -41,6 +41,20 @@ const UserList: React.FC = () => {
 
   const queryString = new URLSearchParams(queryParams).toString();
   const url = `https://syncd-backend.dev.i-dear.org/admin/user/search?${queryString}`;
+
+  const fetcher = async (url: string) => {
+    if (!session) {
+      throw new Error("세션이 없습니다.");
+    }
+    const token = session.user.token;
+    const res = await fetch(url, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    return res.json();
+  };
+
   const { data, error, mutate } = useSWR(url, fetcher);
 
   const handleChangePage = useCallback(
@@ -75,11 +89,17 @@ const UserList: React.FC = () => {
 
   const handleDelete = useCallback(
     async (userId: string) => {
+      if (!session) {
+        console.error("세션이 없습니다.");
+        return;
+      }
+      const token = session.user.token;
       try {
         const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/user/delete", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({ userId }),
         });
@@ -93,10 +113,11 @@ const UserList: React.FC = () => {
         console.error("An error occurred:", error);
       }
     },
-    [mutate]
+    [mutate, session]
   );
 
   const handleEdit = (record: any) => {
+    console.log("Editing user record:", record); // record 객체 확인
     setEditingUser(record);
     setIsModalOpen(true);
   };
@@ -165,11 +186,6 @@ const UserList: React.FC = () => {
       dataIndex: ["user", "profileImg"],
       align: "center",
       render: (value: string) => <img src={value} alt="profile" style={{ width: 50, height: 50 }} />,
-    },
-    {
-      title: "프로젝트 ID",
-      dataIndex: ["user", "projectIds"],
-      render: (projectIds: string[]) => projectIds.join(", "), // 프로젝트 ID들을 콤마로 구분하여 표시
     },
   ];
 

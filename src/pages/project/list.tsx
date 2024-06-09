@@ -9,16 +9,19 @@ import { useRouter } from "next/router";
 import React, { useCallback, useMemo, useState } from "react";
 import useSWR from "swr";
 import * as XLSX from "xlsx";
-import ProjectSearch from "./project-search"; // ProjectSearch 컴포넌트 import
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
+import ProjectSearch from "@/components/page/project/project-search";
+import { useSession } from "next-auth/react";
+import moment from "moment";
 
 const ProjectList: React.FC = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 변경
   const [editingProject, setEditingProject] = useState<any>(null); // 수정할 프로젝트 데이터 상태
+  const [imageModalOpen, setImageModalOpen] = useState(false); // 이미지 모달 상태
+  const [imageSrc, setImageSrc] = useState<string>(""); // 확대할 이미지 URL
   const router = useRouter();
-  const { name, userId, leftChanceForUserstory, startDate, endDate, progress, page = 1, pageSize = 10 } = router.query;
+  const { data: session } = useSession(); // useSession 훅 사용
+  const { name, userId, leftChanceForUserstory, startDate, endDate, progress, userName, page = 1, pageSize = 10 } = router.query;
 
   const queryParams = useMemo(() => {
     const params: Record<string, string | number> = { page: Number(page), pageSize: Number(pageSize) };
@@ -28,11 +31,25 @@ const ProjectList: React.FC = () => {
     if (startDate) params.startDate = String(startDate);
     if (endDate) params.endDate = String(endDate);
     if (progress) params.progress = Number(progress);
+    if (userName) params.userName = String(userName);
     return params;
-  }, [name, userId, leftChanceForUserstory, startDate, endDate, progress, page, pageSize]);
+  }, [name, userId, leftChanceForUserstory, startDate, endDate, progress, userName, page, pageSize]);
 
   const queryString = new URLSearchParams(queryParams as any).toString();
   const url = `https://syncd-backend.dev.i-dear.org/admin/project/search?${queryString}`;
+
+  const fetcher = async (url: string) => {
+    if (!session) {
+      throw new Error("세션이 없습니다.");
+    }
+    const token = session.user.token;
+    const res = await fetch(url, {
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
+    });
+    return res.json();
+  };
 
   const { data, error, mutate } = useSWR(url, fetcher);
 
@@ -68,11 +85,17 @@ const ProjectList: React.FC = () => {
 
   const handleDelete = useCallback(
     async (projectId: string) => {
+      if (!session) {
+        console.error("세션이 없습니다.");
+        return;
+      }
+      const token = session.user.token;
       try {
         const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/project/delete", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({ projectId }),
         });
@@ -86,7 +109,7 @@ const ProjectList: React.FC = () => {
         console.error("An error occurred:", error);
       }
     },
-    [mutate]
+    [mutate, session]
   );
 
   const handleEdit = (record: any) => {
@@ -99,9 +122,23 @@ const ProjectList: React.FC = () => {
     setEditingProject(null);
   };
 
+  const handleImageModalClose = () => {
+    setImageModalOpen(false);
+    setImageSrc("");
+  };
+
   const handleDownloadExcel = async () => {
+    if (!session) {
+      console.error("세션이 없습니다.");
+      return;
+    }
+    const token = session.user.token;
     try {
-      const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/project");
+      const response = await fetch("https://syncd-backend.dev.i-dear.org/admin/project", {
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
       if (!response.ok) {
         console.error("Failed to fetch all projects");
         return;
@@ -145,6 +182,18 @@ const ProjectList: React.FC = () => {
     }
   };
 
+  const parseDate = (dateString: string) => {
+    const isoDate = moment(dateString, moment.ISO_8601, true);
+    if (isoDate.isValid()) {
+      return isoDate.toDate().toLocaleString();
+    }
+    const alternateDate = moment(dateString, "YYYY-MM-DDTHH:mm:ss.SSSSSSS");
+    if (alternateDate.isValid()) {
+      return alternateDate.toDate().toLocaleString();
+    }
+    return dateString; // If parsing fails, return the original string
+  };
+
   const columns: ColumnsType<any> = [
     {
       key: "action",
@@ -178,7 +227,20 @@ const ProjectList: React.FC = () => {
       title: "이미지",
       dataIndex: "img",
       align: "center",
-      render: (value: string) => (value ? <img src={value} alt="project" style={{ width: 50, height: 50 }} /> : "없음"),
+      render: (value: string) =>
+        value ? (
+          <img
+            src={value}
+            alt="project"
+            style={{ width: 50, height: 50, cursor: "pointer" }}
+            onClick={() => {
+              setImageSrc(value);
+              setImageModalOpen(true);
+            }}
+          />
+        ) : (
+          "없음"
+        ),
     },
     {
       title: "진행률",
@@ -195,7 +257,7 @@ const ProjectList: React.FC = () => {
       title: "마지막 수정일",
       dataIndex: "lastModifiedDate",
       align: "center",
-      render: (value: string) => new Date(value).toLocaleString(),
+      render: (value: string) => parseDate(value),
     },
     {
       title: "남은 기회",
@@ -226,9 +288,6 @@ const ProjectList: React.FC = () => {
       <ProjectSearch />
       <DefaultTableBtn className="justify-between">
         <div>
-          <Dropdown disabled={!hasSelected} menu={{ items: modifyDropdownItems }} trigger={["click"]}>
-            <Button>일괄 수정</Button>
-          </Dropdown>
           <span style={{ marginLeft: 8 }}>{hasSelected ? `${selectedRowKeys.length}건 선택` : ""}</span>
         </div>
         <div className="flex-item-list">
@@ -262,6 +321,15 @@ const ProjectList: React.FC = () => {
         footer={null}
       >
         <ProjectCreate project={editingProject} onFinish={mutate} onClose={handleModalClose} />
+      </Modal>
+      <Modal
+        title="이미지 확대"
+        open={imageModalOpen}
+        onCancel={handleImageModalClose}
+        footer={null}
+        centered // 모달을 화면 중앙에 배치
+      >
+        <img src={imageSrc} alt="project enlarged" style={{ width: "100%" }} />
       </Modal>
     </>
   );
